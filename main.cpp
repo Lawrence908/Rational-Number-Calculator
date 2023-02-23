@@ -13,7 +13,7 @@
 
 // Includes
 
-#include "main.hpp"
+#include "main.h"
 #include <iostream>
 #include <cstdint>
 #include <regex>
@@ -81,7 +81,7 @@ void tokenize (string input, int length, string token[]) {
 
 
 // Takes a string with arithmetic in S-expression form, interprets it as a rational expression, and returns that expression.
-RationalExpression interpret (string input, int first, int last) {
+RationalExpression interpret (string input) {
   RationalExpression rex;
   
   for (int i = first; i <= last; i++) {
