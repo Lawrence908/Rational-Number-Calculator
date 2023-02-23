@@ -9,7 +9,7 @@ using namespace std;
 int main() {
     string input;
     cout<< "Input the mathematical expression:"<<endl;
-    getline(cin, input);
+    getline(cin, input); 
     regex expr_regex("\\d+|\\+|\\-|\\*|\\/|\\(|\\)");
 
     sregex_iterator it(input.begin(), input.end(), expr_regex);
