@@ -56,7 +56,7 @@ RationalExpression generateExpression () {
   tokenize(input, length, token);
   
   
-  rex = interpret(token);
+  rex = interpret(token, 1, length - 2);  //strip off parentheses
   return rex;
 }
 
@@ -81,10 +81,44 @@ void tokenize (string input, int length, string token[]) {
 
 
 // Takes a string with arithmetic in S-expression form, interprets it as a rational expression, and returns that expression.
-RationalExpression interpret (string input) {
+RationalExpression interpret (string * token, int first, int last) {
   RationalExpression rex;
-  
+  int operandsCount = 0;
   for (int i = first; i <= last; i++) {
+    if (token[i] == ")") {
+      return rex;
+    }
+    if ((token[i] == "+") || (token[i] == "-") || (token[i] == "*") || (token[i] == "/")) {
+      rex.operation = token[i];
+    } else if (token[i] == "(") {
+      int operandFirst = i + 1;
+      int operandLast;
+      int parenthesisCount = 1;
+      for (int j = i+1; j <= last; j++) {
+        if (token[j] == "(") {
+          parenthesisCount++;
+        } else if (token[j] == ")") {
+          parenthesisCount--
+          if (parenthesisCount == 0) {
+            operandLast = j - 1;
+            break;  //out of for(j...)
+          }
+        }
+      }
+      if (operandsCount == 0) {
+        rex.leftOperand = interpet(token, operandFirst, operandLast);
+      } else if (operandsCount == 1) {
+        rex.rightOperand = interpet(token, operandFirst, operandLast);
+      }
+      operandsCount++
+    } else {
+      if (operandsCount == 0) {
+        rex.leftOperand = token[i];
+      } else if (operandsCount == 1) {
+        rex.rightOperand = token[i];
+      }
+      operandsCount++
+    }
   }
   
   return rex;

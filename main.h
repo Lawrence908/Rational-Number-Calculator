@@ -36,7 +36,7 @@ RationalExpression generateExpression ();
 void tokenize (string input, int length, string token[]);
 
 // Takes a string, interprets it as a rational expression, and returns that expression.
-RationalExpression interpret (string * token);
+RationalExpression interpret (string * token, int first, int last);
 
 // Takes an expression without a known ratio and returns one without operands.
 RationalExpression evaluate (RationalExpression rex);
