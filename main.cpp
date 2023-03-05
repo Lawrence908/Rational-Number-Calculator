@@ -23,7 +23,11 @@ using namespace std;
 
 
 int main () {
-  RationalExpression rex = generateExpression();
+    cout << "START" << endl;
+    RationalExpression rex;
+    cout << "Declared" << endl;
+
+    rex  = generateExpression();
   
   rex = evaluate(rex);
   
@@ -43,8 +47,11 @@ int main () {
 // Generates a rational expression based on user input.
 RationalExpression generateExpression () {
   RationalExpression rex;
+
   string input;
+
   cout << "Enter an arithmetic expression:" << endl;
+
   getline(cin, input);
   
   int length = 0;
@@ -83,6 +90,9 @@ void tokenize (string input, int length, string token[]) {
 // Takes a string with arithmetic in S-expression form, interprets it as a rational expression, and returns that expression.
 RationalExpression interpret (string * token, int first, int last) {
   RationalExpression rex;
+//   RationalExpression* rex = new RationalExpression;
+
+  rex.knownRatio = NULL;
   int operandsCount = 0;
   for (int i = first; i <= last; i++) {
     if (token[i] == ")") {
@@ -98,7 +108,7 @@ RationalExpression interpret (string * token, int first, int last) {
         if (token[j] == "(") {
           parenthesisCount++;
         } else if (token[j] == ")") {
-          parenthesisCount--
+          parenthesisCount--;
           if (parenthesisCount == 0) {
             operandLast = j - 1;
             break;  //out of for(j...)
@@ -106,18 +116,30 @@ RationalExpression interpret (string * token, int first, int last) {
         }
       }
       if (operandsCount == 0) {
-        rex.leftOperand = interpet(token, operandFirst, operandLast);
+        RationalExpression rexLeft = interpret(token, operandFirst, operandLast);
+        rex.leftOperand = &rexLeft;
+
       } else if (operandsCount == 1) {
-        rex.rightOperand = interpet(token, operandFirst, operandLast);
+        RationalExpression rexRight = interpret(token, operandFirst, operandLast);
+        rex.rightOperand = &rexRight;
+
       }
-      operandsCount++
+      operandsCount++;
     } else {
+        Ratio ratio;
+        ratio.top = stoi(token[i]);
+        ratio.bottom = 1;
+        RationalExpression rexKnown;
+        rexKnown.knownRatio = &ratio;
+        rexKnown.operation = "/";
+        rexKnown.leftOperand = NULL;
+        rexKnown.rightOperand = NULL;
       if (operandsCount == 0) {
-        rex.leftOperand = token[i];
+        rex.leftOperand = &rexKnown;
       } else if (operandsCount == 1) {
-        rex.rightOperand = token[i];
+        rex.rightOperand = &rexKnown;
       }
-      operandsCount++
+      operandsCount++;
     }
   }
   

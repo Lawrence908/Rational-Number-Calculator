@@ -1,4 +1,3 @@
-
 //
 //  main.hpp
 //  
@@ -22,7 +21,7 @@ struct Ratio {
 
 struct RationalExpression {
   Ratio * knownRatio = 0;
-  char * operation = 0;
+  string operation;
   RationalExpression * leftOperand = 0;
   RationalExpression * rightOperand = 0;
 };
@@ -45,3 +44,4 @@ RationalExpression evaluate (RationalExpression rex);
 Ratio reduce (Ratio fraction);
 
 #endif /* main_hpp */
+
