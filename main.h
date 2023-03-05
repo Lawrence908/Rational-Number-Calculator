@@ -15,15 +15,15 @@ using namespace std;
 
 // Data structures
 struct Ratio {
-  int64_t top;     // The numerator.
-  int64_t bottom;  // The denominator.
+	int64_t top;     // The numerator.
+	int64_t bottom;  // The denominator.
 };
 
 struct RationalExpression {
-  Ratio * knownRatio = 0;
-  string operation;
-  RationalExpression * leftOperand = 0;
-  RationalExpression * rightOperand = 0;
+	Ratio * knownRatio = 0;
+	string operation;
+	RationalExpression * leftOperand = 0;
+	RationalExpression * rightOperand = 0;
 };
 
 // Function declarations

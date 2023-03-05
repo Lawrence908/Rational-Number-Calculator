@@ -23,137 +23,135 @@ using namespace std;
 
 
 int main () {
-    cout << "START" << endl;
-    RationalExpression rex;
-    cout << "Declared" << endl;
+	RationalExpression rex;
 
-    rex  = generateExpression();
-  
-  rex = evaluate(rex);
-  
-  Ratio * result;
-  if (rex.knownRatio) {
-    result = rex.knownRatio;
-    cout << result->top << " / " << result->bottom << endl;
-  } else {
-    
-  }
-  
-  
-  return 0;
+	rex  = generateExpression();
+
+	rex = evaluate(rex);
+
+	Ratio * result;
+	if (rex.knownRatio) {
+		result = rex.knownRatio;
+		cout << result->top << " / " << result->bottom << endl;
+	} else {
+		
+	}
+
+
+	return 0;
 }
 
 
 // Generates a rational expression based on user input.
 RationalExpression generateExpression () {
-  RationalExpression rex;
+	RationalExpression rex;
 
-  string input;
+	string input;
 
-  cout << "Enter an arithmetic expression:" << endl;
+	cout << "Enter an arithmetic expression:" << endl;
 
-  getline(cin, input);
-  
-  int length = 0;
-  while (input[length]) {
-    length++;
-  }
-  
-  string token[length];
-  tokenize(input, length, token);
-  
-  
-  rex = interpret(token, 1, length - 2);  //strip off parentheses
-  return rex;
+	getline(cin, input);
+	
+	int length = 0;
+	while (input[length]) {
+		length++;
+	}
+	
+	string token[length];
+	tokenize(input, length, token);
+	
+	
+	rex = interpret(token, 1, length - 2);  //strip off parentheses
+	return rex;
 }
 
 
 // Breaks a string into an array of tokens that are parts of an arithmetic expression.
 void tokenize (string input, int length, string token[]) {
-  regex expr_regex("\\d+|\\+|\\-|\\*|\\/|\\(|\\)");
-  
-  sregex_iterator it(input.begin(), input.end(), expr_regex);
-  sregex_iterator end;
-  
-  int i=0;
-  
-  while (it != end) {
-    token[i] = it->str();
-    cout << token[i] << " ";
-    it++;
-    i++;
-  }
-  cout << endl;
+	regex expr_regex("\\d+|\\+|\\-|\\*|\\/|\\(|\\)");
+	
+	sregex_iterator it(input.begin(), input.end(), expr_regex);
+	sregex_iterator end;
+	
+	int i=0;
+	
+	while (it != end) {
+		token[i] = it->str();
+		cout << token[i] << " ";
+		it++;
+		i++;
+	}
+	cout << endl;
 }
 
 
 // Takes a string with arithmetic in S-expression form, interprets it as a rational expression, and returns that expression.
 RationalExpression interpret (string * token, int first, int last) {
-  RationalExpression rex;
+	RationalExpression rex;
 //   RationalExpression* rex = new RationalExpression;
 
-  rex.knownRatio = NULL;
-  int operandsCount = 0;
-  for (int i = first; i <= last; i++) {
-    if (token[i] == ")") {
-      return rex;
-    }
-    if ((token[i] == "+") || (token[i] == "-") || (token[i] == "*") || (token[i] == "/")) {
-      rex.operation = token[i];
-    } else if (token[i] == "(") {
-      int operandFirst = i + 1;
-      int operandLast;
-      int parenthesisCount = 1;
-      for (int j = i+1; j <= last; j++) {
-        if (token[j] == "(") {
-          parenthesisCount++;
-        } else if (token[j] == ")") {
-          parenthesisCount--;
-          if (parenthesisCount == 0) {
-            operandLast = j - 1;
-            break;  //out of for(j...)
-          }
-        }
-      }
-      if (operandsCount == 0) {
-        RationalExpression rexLeft = interpret(token, operandFirst, operandLast);
-        rex.leftOperand = &rexLeft;
+	rex.knownRatio = NULL;
+	int operandsCount = 0;
+	for (int i = first; i <= last; i++) {
+		if (token[i] == ")") {
+			return rex;
+		}
+		if ((token[i] == "+") || (token[i] == "-") || (token[i] == "*") || (token[i] == "/")) {
+			rex.operation = token[i];
+		} else if (token[i] == "(") {
+			int operandFirst = i + 1;
+			int operandLast;
+			int parenthesisCount = 1;
+			for (int j = i+1; j <= last; j++) {
+				if (token[j] == "(") {
+					parenthesisCount++;
+				} else if (token[j] == ")") {
+					parenthesisCount--;
+					if (parenthesisCount == 0) {
+						operandLast = j - 1;
+						break;  //out of for(j...)
+					}
+				}
+			}
+			if (operandsCount == 0) {
+				RationalExpression rexLeft = interpret(token, operandFirst, operandLast);
+				rex.leftOperand = &rexLeft;
 
-      } else if (operandsCount == 1) {
-        RationalExpression rexRight = interpret(token, operandFirst, operandLast);
-        rex.rightOperand = &rexRight;
+			} else if (operandsCount == 1) {
+				RationalExpression rexRight = interpret(token, operandFirst, operandLast);
+				rex.rightOperand = &rexRight;
 
-      }
-      operandsCount++;
-    } else {
-        Ratio ratio;
-        ratio.top = stoi(token[i]);
-        ratio.bottom = 1;
-        RationalExpression rexKnown;
-        rexKnown.knownRatio = &ratio;
-        rexKnown.operation = "/";
-        rexKnown.leftOperand = NULL;
-        rexKnown.rightOperand = NULL;
-      if (operandsCount == 0) {
-        rex.leftOperand = &rexKnown;
-      } else if (operandsCount == 1) {
-        rex.rightOperand = &rexKnown;
-      }
-      operandsCount++;
-    }
-  }
-  
-  return rex;
+			}
+			operandsCount++;
+		} else {
+				Ratio ratio;
+				ratio.top = stoi(token[i]);
+				ratio.bottom = 1;
+				RationalExpression rexKnown;
+				rexKnown.knownRatio = &ratio;
+				rexKnown.operation = "/";
+				rexKnown.leftOperand = NULL;
+				rexKnown.rightOperand = NULL;
+			if (operandsCount == 0) {
+				rex.leftOperand = &rexKnown;
+			} else if (operandsCount == 1) {
+				rex.rightOperand = &rexKnown;
+			}
+			operandsCount++;
+		}
+	}
+	
+	return rex;
 }
 
 
 // Takes an expression without a known ratio and returns one without operands.
 RationalExpression evaluate (RationalExpression rex) {
-  return rex;
+	return rex;
 }
 
 
 // Takes a fraction and returns its reduced fraction.
 Ratio reduce (Ratio fraction) {
-  return fraction;
+	return fraction;
 }
