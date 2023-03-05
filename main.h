@@ -1,12 +1,17 @@
-//
-//  main.hpp
-//  
-//
-//  Created by Rafe Saltman on 2023-02-22.
-//
+/** Rational Calculator
+ *
+ *  @file main.h
+ *  @brief A calculator for rational number arithmetic.
+ *
+ *  
+ *
+ *  @author Rafe Saltman, Chris Lawrence, and Santiago Daza
+ *  @version 0.1.0
+ *  @date Feb 22, 2023
+ */
 
-#ifndef main_hpp
-#define main_hpp
+#ifndef main_h
+#define main_h
 
 #include <stdio.h>
 #include <string>
@@ -43,5 +48,11 @@ RationalExpression evaluate (RationalExpression rex);
 // Takes a fraction and returns its reduced fraction.
 Ratio reduce (Ratio fraction);
 
-#endif /* main_hpp */
+// Prints a Rational expression out to the console
+void showRex(RationalExpression* rex);
+
+// Prints a ratio out to the console
+void showRatio(Ratio* ratio);
+
+#endif /* main_h */
 
