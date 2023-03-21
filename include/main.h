@@ -31,6 +31,17 @@ struct RationalExpression {
 	RationalExpression * rightOperand = 0;
 };
 
+// class RationalExpression {
+// private:
+//   Ratio * knownRatio;
+//   string operation;
+//   RationalExpression * leftOperand;
+//   RationalExpression * rightOperand;
+// public:
+//   RationalExpression();
+//   RationalExpression();
+// }
+
 // Function declarations
 
 // Generates a rational expression based on user input.
