@@ -13,8 +13,10 @@
 #ifndef ratio_h
 #define ratio_h
 
+// Included libraries and helper function declarations.
 #include <cstdint>
-#include "reduce.cpp"
+#include <iostream>
+int64_t gcd(int64_t a, int64_t b);
 
 
 class Ratio {
@@ -34,16 +36,16 @@ public:
     /** @brief Destructor. */
     ~Ratio () {}
 
-    /** @brief Returns whether a ratio's denominator is zero. */
-    bool dividesByZero () {
-        return !bottom;
-    }
+    // /** @brief Returns whether a ratio's denominator is zero. */
+    // bool dividesByZero () {
+    //     return !bottom;
+    // }
 
     /** @brief Reduces a ratio.
      * 
-     * Converts a ratio to its reduced ratio. Makes the denominator positive. Uses Euclid's algorithm to find the GCD, or greatest common divisor of top and bottom. In place, divides top and bottom by the GCD.
+     * Converts a ratio to its reduced ratio. Makes the denominator positive. Finds the GCD of top and bottom. In place, divides top and bottom by the GCD.
      */
-    void reduce() {
+    void reduce () {
         if (bottom < 0) {
             top = -top;
             bottom = -bottom;
@@ -51,6 +53,10 @@ public:
         int64_t greatestDivisor = gcd(top, bottom);
         top = top / greatestDivisor;
         bottom = bottom / greatestDivisor;
+    }
+
+    void print () {
+        cout << top << " / " << bottom << endl;
     }
 
     /** @brief Gives RationalExpression access to Ratio. Only a RationalExpression can get and set in a Ratio. */
@@ -63,6 +69,18 @@ public:
  * @param a, b Integers.
  * @return The greatest common divisor of a, b.
  */
-int64_t gcd(int64_t a, int64_t b);
+int64_t gcd(int64_t a, int64_t b) {
+    int64_t q;
+    int64_t r = 1;
+    while (r != 0) {
+        q = a / b;
+        r = a - (q * b);
+        if (r == 0)
+            return abs(b);
+        a = b;
+        b = r;
+    }
+    return 0;
+}
 
 #endif

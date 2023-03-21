@@ -13,34 +13,30 @@
 
 // Includes
 
-#include "main.h"
 #include <iostream>
 #include <cstdint>
 #include <regex>
 #include <string>
+#include "main.h"
+#include "rationalexpression.h"
 using namespace std;
 
 
 
 int main ()	{
 	RationalExpression rex;
-
-	rex  = generateExpression();
+	rex(generateExpression());
 
 cout << "EXIT generate" << endl;
 
-// showRatio(rex.knownRatio);
-showRex(rex.leftOperand);
-// showRex(rex.rightOperand);
-
 cout << "Onwards to evaluate" << endl;
 
-	rex = evaluate(rex);
+	rex(evaluate(rex));
 
 	Ratio * result;
 	if (rex.knownRatio)	{
 		result = rex.knownRatio;
-		cout << result->top << " / " << result->bottom << endl;
+		result->print();
 	} else {
 		
 	}
@@ -51,7 +47,7 @@ cout << "Onwards to evaluate" << endl;
 
 
 // Generates a rational expression based on user input.
-RationalExpression generateExpression ()	{
+RationalExpression generateExpression () {
 	RationalExpression rex;
 
 	string input;
@@ -68,7 +64,7 @@ RationalExpression generateExpression ()	{
 	string token[length];
 	tokenize(input, length, token);
 		
-	rex = interpret(token, 1, length - 2);  //strip off parentheses
+	rex(RationalExpression::interpret(token, 1, length - 2));  //strip off parentheses
 
 	return rex;
 }
@@ -94,7 +90,7 @@ void tokenize (string input, int length, string token[])	{
 
 
 // Takes a string with arithmetic in S-expression form, interprets it as a rational expression, and returns that expression.
-RationalExpression interpret (string * token, int first, int last)	{
+RationalExpression RationalExpression::interpret (string * token, int first, int last)	{
 	RationalExpression rex;
 
 	rex.knownRatio = NULL;
@@ -162,27 +158,6 @@ cout << "Iterating i" << endl;
 
 
 // Takes an expression without a known ratio and returns one without operands.
-RationalExpression evaluate (RationalExpression rex)	{
+RationalExpression RationalExpression::evaluate (RationalExpression rex)	{
 	return rex;
-}
-
-
-// Takes a fraction and returns its reduced fraction.
-Ratio reduce (Ratio fraction)	{
-	return fraction;
-}
-
-// Prints a Rational expression out to the console
-void showRex(RationalExpression* rex)	{
-	showRatio(rex->knownRatio);
-	cout << "Rex Left Operand: " << rex->leftOperand << endl;
-	cout << "Rex Operation: " << rex->operation << endl;
-	cout << "Rex Right Operand: " << rex->rightOperand << endl;
-	return;
-}
-
-// Prints a ratio out to the console
-void showRatio(Ratio* ratio){
-	cout << "Rex Known Ratio: " << ratio->top << "/" << ratio->bottom << endl;
-	return;
 }

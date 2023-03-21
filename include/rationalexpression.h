@@ -16,6 +16,8 @@
 #include <stdio.h>
 #include <string>
 #include "ratio.h"
+#include "rationalexpression.cpp"
+using namespace std;
 
 class RationalExpression {
 private:
@@ -25,7 +27,8 @@ private:
   RationalExpression * rightOperand;
 public:
   RationalExpression();
-  ~RationalExpression();
+  ~RationalExpression() {}
+  RationalExpression(RationalExpression&&);
 
   Ratio getRatio();
   string getOperation();
@@ -37,7 +40,27 @@ public:
   void setLeftOperand();
   void setRightOperand();
 
-  RationalExpression generateExpression();
+
+  // Takes a string, interprets it as a rational expression, and returns that expression.
+  RationalExpression interpret (string * token, int first, int last);
+
+  // Takes an expression without a known ratio and returns one without operands.
+  RationalExpression evaluate (RationalExpression rex);
+
+  // Prints the enclosing expression
+  RationalExpression print (string enclosing, int insertionPoint);
+
+
+  // Prints a Rational expression out to the console
+  void showRex (RationalExpression * rex)	{
+    cout << "Rex Known Ratio: " << endl;
+    rex->knownRatio->print();
+    cout << "Rex Left Operand: " << rex->leftOperand << endl;
+    cout << "Rex Operation: " << rex->operation << endl;
+    cout << "Rex Right Operand: " << rex->rightOperand << endl;
+    return;
+  }
+
 };
 
 #endif
