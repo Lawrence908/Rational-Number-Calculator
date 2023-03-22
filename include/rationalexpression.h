@@ -30,7 +30,7 @@ public:
   ~RationalExpression() {}
   RationalExpression(RationalExpression&&);
 
-  Ratio getRatio();
+  Ratio * getRatio();
   string getOperation();
   RationalExpression * getLeftOperand();
   RationalExpression * getRightOperand();
@@ -42,13 +42,13 @@ public:
 
 
   // Takes a string, interprets it as a rational expression, and returns that expression.
-  RationalExpression interpret (string * token, int first, int last);
+  void interpret (string * token, int first, int last);
 
   // Takes an expression without a known ratio and returns one without operands.
-  RationalExpression evaluate (RationalExpression rex);
+  void evaluate ();
 
   // Prints the enclosing expression
-  RationalExpression print (string enclosing, int insertionPoint);
+  void print (string enclosing, int insertionPoint);
 
 
   // Prints a Rational expression out to the console

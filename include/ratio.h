@@ -16,6 +16,7 @@
 // Included libraries and helper function declarations.
 #include <cstdint>
 #include <iostream>
+using namespace std;
 int64_t gcd(int64_t a, int64_t b);
 
 

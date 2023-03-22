@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include <string>
 #include "rationalexpression.h"
-#include "main.cpp"
 using namespace std;
 
 // Function declarations
