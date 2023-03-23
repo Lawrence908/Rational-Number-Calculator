@@ -87,7 +87,7 @@ void RationalExpression::interpret (string * token, int first, int last)	{
 
 // Takes an expression without a known ratio and returns one without operands.
 void RationalExpression::evaluate () {
-	
+		
 }
 
 // Prints the enclosing expression
