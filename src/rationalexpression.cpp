@@ -87,15 +87,22 @@ void RationalExpression::interpret (string * token, int first, int last)	{
 
 // Takes an expression without a known ratio and returns one without operands.
 void RationalExpression::evaluate () {
-		
+	if (_leftOperand->_leftOperand != 0)	{
+		_leftOperand->evaluate();	
+	}
+	if (_rightOperand->_leftOperand != 0)	{
+		_rightOperand->evaluate();	
+	}
+	_knownRatio = _leftOperand->_knownRatio _operator _rightOperand->_knownRatio;
 }
+
 
 // Prints the enclosing expression
 void RationalExpression::print (string enclosing, int insertionPoint) {
 }
 
-  // Prints a Rational expression out to the console
-  void RationalExpression::show ()	{
+// Prints a Rational expression out to the console
+void RationalExpression::show ()	{
     cout << "Rex Known Ratio: ";
 	if(_knownRatio)	{
     	_knownRatio->print();
@@ -115,4 +122,4 @@ void RationalExpression::print (string enclosing, int insertionPoint) {
     	cout << "Rex Right Operand value: "; _rightOperand->show(); cout << endl;
 	}
     return;
-  }
+}
