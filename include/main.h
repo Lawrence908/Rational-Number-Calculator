@@ -24,7 +24,7 @@ using namespace std;
 RationalExpression generateExpression();
 
 // Breaks a string into an array of tokens that are parts of an arithmetic expression.
-void tokenize (string input, int length, string token[]);
+void tokenize (string input, string token[], int &tokenLength);
 
 
 #endif /* main_h */

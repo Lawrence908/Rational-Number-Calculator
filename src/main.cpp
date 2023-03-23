@@ -17,9 +17,10 @@
 #include <cstdint>
 #include <regex>
 #include <string>
-#include "ratio.h"
-#include "rationalexpression.h"
-#include "main.h"
+#include "../include/ratio.h"
+#include "../include/rationalexpression.h"
+#include "../include/main.h"
+#include "rationalexpression.cpp"
 
 using namespace std;
 
@@ -33,15 +34,26 @@ int main ()	{
 	cout << "Enter an arithmetic expression:" << endl;
 
 	getline(cin, input);
-	
-	int length = 0;
-	while (input[length])	{
-		length++;
+
+	int inputLength = 0;
+		while (input[inputLength])	{
+		inputLength++;
 	}
 	
-	string token[length];
-	tokenize(input, length, token);
-	rex.interpret(token, 1, length - 2);  //strip off parentheses
+	string token[inputLength];
+	int tokenLength;
+	tokenize(input, token, tokenLength);
+
+	// for (int i = 0; i < tokenLength; i++)
+	// {
+	// 	cout << token[i] << endl;
+	// }
+
+	rex.interpret(token, 1, tokenLength - 2);  //strip off parentheses
+
+// cout << "top: "; rex.getRatio()->print(); cout << endl;
+	rex.show();
+
 	rex.evaluate();
 
 	Ratio * result;
@@ -58,7 +70,7 @@ int main ()	{
 
 
 // Breaks a string into an array of tokens that are parts of an arithmetic expression.
-void tokenize (string input, int length, string token[])	{
+void tokenize (string input, string token[], int &tokenLength)	{
 	regex expr_regex("\\d+|\\+|\\-|\\*|\\/|\\(|\\)");
 	
 	sregex_iterator it(input.begin(), input.end(), expr_regex);
@@ -73,4 +85,5 @@ void tokenize (string input, int length, string token[])	{
 		i++;
 	}
 	cout << endl;
+	tokenLength = i;
 }
