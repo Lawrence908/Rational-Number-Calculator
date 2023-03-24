@@ -93,8 +93,22 @@ void RationalExpression::evaluate () {
 	if (_rightOperand->_leftOperand != 0)	{
 		_rightOperand->evaluate();	
 	}
-	_knownRatio = _leftOperand->_knownRatio _operator _rightOperand->_knownRatio;
+	switch(_operator){
+		case "+":
+		_knownRatio = _leftOperand->_knownRatio + _rightOperand->_knownRatio;
+		break;
+		case "-":
+		_knownRatio = _leftOperand->_knownRatio - _rightOperand->_knownRatio;
+		break;
+		case "*":
+		_knownRatio = _leftOperand->_knownRatio * _rightOperand->_knownRatio;
+		break;
+		case "/":
+		_knownRatio = _leftOperand->_knownRatio / _rightOperand->_knownRatio;
+		break;
+	}
 }
+
 
 
 // Prints the enclosing expression
