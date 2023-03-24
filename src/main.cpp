@@ -52,19 +52,20 @@ int main ()	{
 	rex.interpret(token, 1, tokenLength - 2);  //strip off parentheses
 
 // cout << "top: "; rex.getRatio()->print(); cout << endl;
-	rex.print();
+
+	// rex.print();
 
 	rex.evaluate();
 
-cout<< "Evaluate complete." << endl << endl;
+cout<< "Evaluate complete." << endl;
 
-    rex.print();
+    // rex.print();
 
 	Ratio * result;
 	if (rex.getRatio())	{
 		result = rex.getRatio();
 		// result->print();
-        cout << result << endl;
+        cout << "Result = " << *result << endl;
 	} else {
 		
 	}
