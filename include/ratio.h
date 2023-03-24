@@ -91,6 +91,10 @@ public:
             top = -top;
             bottom = -bottom;
         }
+        if (!top) {
+            bottom = 1;
+            return;
+        }
         int64_t greatestDivisor = gcd(top, bottom);
         if (!greatestDivisor) {
             cout << "Division by zero: numerator " << top << " and denominator " << bottom
@@ -119,6 +123,8 @@ int64_t gcd(int64_t a, int64_t b) {
     int64_t q;
     int64_t r = 1;
     while (r != 0) {
+        if (!b)
+            return 0;
         q = a / b;
         r = a - (q * b);
         if (r == 0)
@@ -126,7 +132,6 @@ int64_t gcd(int64_t a, int64_t b) {
         a = b;
         b = r;
     }
-    return 0;
 }
 
 #endif
