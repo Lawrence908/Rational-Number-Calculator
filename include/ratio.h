@@ -37,10 +37,50 @@ public:
     /** @brief Destructor. */
     ~Ratio () {}
 
-    // /** @brief Returns whether a ratio's denominator is zero. */
-    // bool dividesByZero () {
-    //     return !bottom;
-    // }
+
+     /** @brief Overloaded + addition.
+     * 
+     * Given two ratios, returns their sum as a ratio.
+     */
+    Ratio operator + (Ratio right) {
+        int64_t sumTop = top * right.bottom + bottom * right.top;
+        int64_t sumBottom = bottom * right.bottom;
+        return Ratio(sumTop, sumBottom);
+    }
+
+
+     /** @brief Overloaded - subtraction.
+     * 
+     * Given two ratios, returns their sum as a ratio.
+     */
+    Ratio operator - (Ratio right) {
+        int64_t sumTop = top * right.bottom - bottom * right.top;
+        int64_t sumBottom = bottom * right.bottom;
+        return Ratio(sumTop, sumBottom);
+    }
+
+
+     /** @brief Overloaded * multiplication.
+     * 
+     * Given two ratios, returns their sum as a ratio.
+     */
+    Ratio operator * (Ratio right) {
+        int64_t sumTop = top * right.top;
+        int64_t sumBottom = bottom * right.bottom;
+        return Ratio(sumTop, sumBottom);
+    }
+
+
+     /** @brief Overloaded / division.
+     * 
+     * Given two ratios, returns their sum as a ratio.
+     */
+    Ratio operator / (Ratio right) {
+        int64_t sumTop = top * right.bottom;
+        int64_t sumBottom = bottom * right.top;
+        return Ratio(sumTop, sumBottom);
+    }
+
 
     /** @brief Reduces a ratio.
      * 
@@ -52,6 +92,11 @@ public:
             bottom = -bottom;
         }
         int64_t greatestDivisor = gcd(top, bottom);
+        if (!greatestDivisor) {
+            cout << "Division by zero: numerator " << top << " and denominator " << bottom
+                 << " have no greatest common divisor." << endl;
+            return;
+        }
         top = top / greatestDivisor;
         bottom = bottom / greatestDivisor;
     }
