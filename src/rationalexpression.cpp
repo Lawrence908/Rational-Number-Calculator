@@ -115,7 +115,7 @@ void RationalExpression::evaluate () {
 	}
 	_knownRatio->reduce();
 
-	delete _leftOperand, _rightOperand;
+	delete _leftOperand, delete _rightOperand;
 	_leftOperand = 0;
 	_rightOperand = 0;
 }
@@ -125,7 +125,7 @@ void RationalExpression::evaluate () {
 void RationalExpression::print ()	{
     cout << "Rex Known Ratio: ";
 	if(_knownRatio)	{
-    	cout << *_knownRatio;
+    	cout << *_knownRatio << endl;;
 	} else {
 		cout << "NULL." << endl;
 	}

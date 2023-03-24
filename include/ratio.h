@@ -131,7 +131,9 @@ int64_t gcd (int64_t a, int64_t b) {
             return abs(b);
         a = b;
         b = r;
+        
     }
+    return 0;
 }
 
 #endif
