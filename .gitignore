@@ -1,1 +1,4 @@
 reducex
+.vscode/c_cpp_properties.json
+.vscode/settings.json
+src/gcd-scratch.cpp

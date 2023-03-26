@@ -11,8 +11,7 @@
  */
 
 
-// Includes
-
+// Included library, header, and source files
 #include <iostream>
 #include <cstdint>
 #include <regex>
@@ -21,19 +20,20 @@
 #include "../include/rationalexpression.h"
 #include "../include/main.h"
 #include "rationalexpression.cpp"
-
 using namespace std;
 
 
-
-int main ()	{
+int main (int argc, char ** argv) {
 	RationalExpression rex;
-
-	string input;
-
-	cout << "Enter an arithmetic expression:" << endl;
-
-	getline(cin, input);
+	string input = "";
+	if (argc > 1) {
+		for (int i = 1; i < argc; i++) {
+			input += argv[i];
+		}
+	} else {
+		cout << "Enter an arithmetic expression:" << endl;
+		getline(cin, input);
+	}
 
 	int inputLength = 0;
 		while (input[inputLength])	{
@@ -49,7 +49,11 @@ int main ()	{
 	// 	cout << token[i] << endl;
 	// }
 
-	rex.interpret(token, 1, tokenLength - 2);  //strip off parentheses
+	if (token[0] == "(") {
+		rex.interpret(token, 1, tokenLength - 2);  //strip off parentheses
+	} else {
+		rex.interpret(token, 0, tokenLength - 1);
+	}
 
 // cout << "top: "; rex.getRatio()->print(); cout << endl;
 
