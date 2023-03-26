@@ -93,14 +93,12 @@ public:
 
 
     /** @brief Reduces a ratio.
-     * Converts a ratio to its reduced fraction. Complains if the denominator is zero. Otherwise, first makes the denominator positive. Then finds the GCD of top and bottom. In place, divides top and bottom by the GCD.
+     * Converts a ratio to its reduced fraction. Does nothing to 0/0. Otherwise, first makes the denominator non-negative. Then finds the GCD of top and bottom. In place, divides top and bottom by the GCD.
      * Calls helper function gcd.
      */
     void reduce () {
-        if (!bottom) {
-            cout << "Division by zero: the denominator of " << this << " is zero." << endl;
+        if (!top && !bottom)
             return;
-        }
         if (bottom < 0) {
             top = -top;
             bottom = -bottom;
@@ -122,18 +120,15 @@ public:
 int64_t gcd (int64_t a, int64_t b) {
     if (b == 0)
         return abs(a);
-    int64_t q;
-    int64_t r = 1;
+    int64_t q = a / b;
+    int64_t r = a - (q * b);
     while (r != 0) {
-        q = a / b;
-        r = a - (q * b);
-        if (r == 0)
-            return abs(b);
         a = b;
         b = r;
-        
+        q = a / b;
+        r = a - (q * b);        
     }
-    return 0;
+    return abs(b);
 }
 
 #endif
