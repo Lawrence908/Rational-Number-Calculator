@@ -9,6 +9,7 @@
  */
 
 #include <iostream>
+#include <cctype>
 using namespace std;
 
 RationalExpression::RationalExpression (): _knownRatio(0), _operator('/'), _leftOperand(0), _rightOperand(0) {}
@@ -70,7 +71,7 @@ void RationalExpression::interpret (string * token, int first, int last)	{
 				_rightOperand->interpret(token, operandFirstIndex, operandLastIndex);
 			}
 			operandsCount++;
-		} else {
+		} else if (isdigit(token[i][0])) {
 				int64_t top = (int64_t)stoi(token[i]);
 				Ratio * ratio = new Ratio(top);
 				RationalExpression * rexKnown = new RationalExpression();
@@ -88,10 +89,10 @@ void RationalExpression::interpret (string * token, int first, int last)	{
 
 // Takes an expression without a known ratio and returns one without operands.
 void RationalExpression::evaluate () {
-	if (_leftOperand->_leftOperand != 0)	{
+	if (_leftOperand->_leftOperand != 0) {
 		_leftOperand->evaluate();	
 	}
-	if (_rightOperand->_leftOperand != 0)	{
+	if (_rightOperand->_leftOperand != 0) {
 		_rightOperand->evaluate();	
 	}
 
