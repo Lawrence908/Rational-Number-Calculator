@@ -33,9 +33,8 @@ public:
 	RationalExpression (RationalExpression &&);
 	RationalExpression & operator = (RationalExpression &&);
 
-	// Ratio getter and setter.
+	// Ratio getter.
 	Ratio * getRatio();
-	void setRatio(Ratio *);
 
 	// Give whether a Rex has a particular operand.
 	bool hasLeft();
@@ -46,12 +45,6 @@ public:
 
 	// Evaluates a Rex (that has one or two operands) by rational arithmetic.
 	void evaluate ();
-
-	// Prints a Rational expression out to the console
-	void print ();
-
-	// Prints the enclosing expression.
-	void printEnclosing (string enclosing, int insertionPoint);
 };
 
 

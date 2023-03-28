@@ -29,22 +29,23 @@ void tokenize (string input, string token[], int &tokenLength);
 
 int main (int argc, char ** argv) {
 	cout << "Rational Calculator v0.1." << endl;
-	// First, we need an input string and a RationalExpression object to hold our interpretation of the string.
+	// Input from the shell or from a prompt.
 	string input = "";
-	RationalExpression rex;
 	if (argc > 2) {
 		cout << "Usage: rc may take one shell argument. Use quotation marks." << endl;
 		return 0;
 	}
-	if (argc == 2) {        // An expression was given as a shell argument.
+	if (argc == 2) {
 		input = argv[1];
-	} else {                // No shell argument. Prompt the user.
+	} else {
 		cout << "   rc > ";
 		getline(cin, input);
 	}
 
 	// Calculator loop. An input starting with 'q' quits the program.
 	while (tolower(input[0]) != 'q') {
+		// For each input, we need a RationalExpression object to hold our interpretation of the string.
+		RationalExpression rex;
 		int inputLength = 0;
 		while (input[inputLength])
 			inputLength++;
@@ -54,12 +55,7 @@ int main (int argc, char ** argv) {
 		tokenize(input, token, tokenLength);
 
 		// Now that the input is tokenized, we use those tokens to build an arithmetic expression.
-		if (token[0] == "(" && token[tokenLength - 1] == ")") {
-			// Strip off the outermost parentheses.
-			rex.interpret(token, 1, tokenLength - 2);
-		} else {
-			rex.interpret(token, 0, tokenLength - 1);
-		}
+		rex.interpret(token, 0, tokenLength - 1);
 
 		// If we have an expression with at least one operand, we evaluate, simplifying until it is an expression of a known ratio.
 		if (rex.hasLeft())
@@ -70,7 +66,6 @@ int main (int argc, char ** argv) {
 		if (rex.getRatio()) {
 			result = rex.getRatio();
 			cout << "Result: " << *result << endl;
-			rex.setRatio(0);
 		}
 
 		// Get the next input and repeat.
