@@ -1,4 +1,4 @@
-/** Rational Calculator: Ratio class design and implementation.
+/** Rational Calculator: Ratio class header and implementation.
  *
  *  @file ratio.h
  *  @brief A class that represents a ratio of integers p/q.
@@ -126,7 +126,7 @@ int64_t gcd (int64_t a, int64_t b) {
         a = b;
         b = r;
         q = a / b;
-        r = a - (q * b);        
+        r = a - (q * b);       
     }
     return abs(b);
 }
