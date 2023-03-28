@@ -58,13 +58,6 @@ Ratio * RationalExpression:: getRatio() {
 }
 
 
-/** @brief Ratio setter. Sets this Rex's known ratio pointer.
- */
-void RationalExpression:: setRatio(Ratio * ratio) {
-	_knownRatio = ratio;
-}
-
-
 /** @brief Gives whether this Rex has a particular operand.
  * @return True if this Rex has the named operand. False otherwise.
  */
@@ -185,30 +178,3 @@ void RationalExpression:: evaluate () {
 		_rightOperand = 0;
 	}
 }
-
-
-// Prints a Rational expression out to the console
-void RationalExpression:: print () {
-	cout << "Rex Known Ratio: ";
-	if(_knownRatio) {
-		cout << *_knownRatio << endl;;
-	} else {
-		cout << "NULL." << endl;
-	}
-
-	cout << "Rex Operator: " << _operator << endl;
-
-	cout << "Rex Left Operand address: " << _leftOperand << endl;
-	if(_leftOperand) {
-		cout << "Rex Left Operand value: "; _leftOperand->print(); cout << endl;
-	}
-
-	cout << "Rex Right Operand address: " << _rightOperand << endl;
-	if(_rightOperand) {
-		cout << "Rex Right Operand value: "; _rightOperand->print(); cout << endl;
-	}
-}
-
-
-// Prints the enclosing expression
-void RationalExpression:: printEnclosing (string enclosing, int insertionPoint) {}
