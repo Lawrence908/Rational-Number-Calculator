@@ -54,7 +54,7 @@ int main (int argc, char ** argv) {
 		tokenize(input, token, tokenLength);
 
 		// Now that the input is tokenized, we use those tokens to build an arithmetic expression.
-		if (token[0] == "(") {
+		if (token[0] == "(" && token[tokenLength - 1] == ")") {
 			// Strip off the outermost parentheses.
 			rex.interpret(token, 1, tokenLength - 2);
 		} else {
