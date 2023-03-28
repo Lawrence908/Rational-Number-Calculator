@@ -1,7 +1,9 @@
-/** Rational Calculator: Rational expression class design.
+/** Rational Calculator: Rational expression class header.
  *
  *  @file rationalexpression.h
  *  @brief A class that represents a rational expression.
+ *
+ *  In this class header file, comments will shorten RationalExpression to Rex.
  *
  *  @author Rafe Saltman, Chris Lawrence, and Santiago Daza
  *  @version 0.1.0
@@ -18,30 +20,44 @@ using namespace std;
 
 class RationalExpression {
 private:
-  Ratio * _knownRatio;
-  char _operator;
-  RationalExpression * _leftOperand;
-  RationalExpression * _rightOperand;
+	Ratio * _knownRatio;
+	char _operator;
+	RationalExpression * _leftOperand;
+	RationalExpression * _rightOperand;
+
 public:
-  RationalExpression();
-  ~RationalExpression() {}
-  RationalExpression(RationalExpression&&);
-  RationalExpression& operator = (RationalExpression&&);
+	// Rex constructors, destructor, and move assignment.
+	RationalExpression ();
+	RationalExpression (Ratio *);
+	~RationalExpression () {}
+	RationalExpression (RationalExpression &&);
+	RationalExpression & operator = (RationalExpression &&);
 
-  // 
-  Ratio * getRatio();
+	// Ratio getter and setter.
+	Ratio * getRatio();
+	void setRatio(Ratio *);
 
-  // Takes a string, interprets it as a rational expression, and returns that expression.
-  void interpret (string * token, int first, int last);
+	// Give whether a Rex has a particular operand.
+	bool hasLeft();
+	bool hasRight();
 
-  // Takes an expression without a known ratio and returns one without operands.
-  void evaluate ();
+	// Converts a sequence of tokens into a Rex.
+	void interpret (string * token, int first, int last);
 
-  // Prints a Rational expression out to the console
-  void print ();
+	// Evaluates a Rex (that has one or two operands) by rational arithmetic.
+	void evaluate ();
 
-  // Prints the enclosing expression.
-  void printEnclosing (string enclosing, int insertionPoint);
+	// Prints a Rational expression out to the console
+	void print ();
+
+	// Prints the enclosing expression.
+	void printEnclosing (string enclosing, int insertionPoint);
 };
+
+
+// Helper non-member functions.
+// From an opening parenthesis, finds the index of the token just before the matching closing parenthesis.
+int matchingParenthesis (string * token, int first, int last);
+
 
 #endif
