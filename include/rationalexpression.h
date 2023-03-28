@@ -36,6 +36,9 @@ public:
   // Ratio getter.
   Ratio * getRatio();
 
+  // Gives whether a Rex has both operands.
+  bool hasOperands();
+
   // Converts a sequence of tokens into a Rex.
   void interpret (string * token, int first, int last);
 

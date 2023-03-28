@@ -58,6 +58,14 @@ Ratio * RationalExpression:: getRatio() {
 }
 
 
+/** @brief Gives whether this Rex has both operands.
+ * @return True if this Rex has both operands. False otherwise.
+ */
+bool RationalExpression:: hasOperands() {
+    return (_leftOperand && _rightOperand);
+}
+
+
 /** @brief Token-interpreting "constructor".
  * Takes an array of tokens with a relevant range. Interprets the part of the array within the relevant range as the elements of a Rex. Gives those elements to this Rex. Recursively constructs this Rex's left and right operands the same way.
  */

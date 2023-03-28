@@ -32,12 +32,13 @@ int main (int argc, char ** argv) {
 	// First, we need an input string and a RationalExpression object to hold our interpretation of the string.
 	string input = "";
 	RationalExpression rex;
-	if (argc > 1) {
-		// An expression was given as shell arguments. Concatenate them.
-		for (int i = 1; i < argc; i++)
-			input += argv[i];
-	} else {
-		// No shell argument. Prompt the user.
+	if (argc > 2) {
+		cout << "Usage: rc may take one shell argument, a rational expression enclosed in quotation marks." << endl;
+		return 0;
+	}
+	if (argc == 1) {	// An expression was given as a shell argument.
+		input = argv[1];
+	} else {		// No shell argument. Prompt the user.
 		cout << "rc > ";
 		getline(cin, input);
 	}
@@ -60,8 +61,10 @@ int main (int argc, char ** argv) {
 			rex.interpret(token, 0, tokenLength - 1);
 		}
 
-		// Now that we have an expression with operands, we evaluate, simplifying until it is an expression of a known ratio.
-		rex.evaluate();
+		// As long as we have an expression with operands, we evaluate, simplifying until it is an expression of a known ratio.
+		if (rex.hasOperands()) {
+			rex.evaluate();
+		}
 
 		// Print the result.
 		Ratio * result;
@@ -80,7 +83,7 @@ int main (int argc, char ** argv) {
 
 /**
  * @brief Breaks a string into tokens.
- * Breaks an input string into a sequence of tokens that are parts of an arithmetic expression. Each token is a string that is either one of the symbols +-/*() or numeric. Prints the sequence of tokens. Fills the token array with the sequence and counts the tokens.
+ * Breaks an input string into a sequence of tokens that are parts of an arithmetic expression. Each token is a string that is either one of the symbols +*-/() or numeric. Prints the sequence of tokens. Fills the token array with the sequence and counts the tokens.
  * @param input The input string.
  * @param token The array of token strings. Should start empty with an upper-bound size. Gets filled with the expression's tokens.
  * @param tokenLength The count of tokens. Passed and returned by value.
