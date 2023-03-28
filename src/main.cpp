@@ -55,12 +55,7 @@ int main (int argc, char ** argv) {
 		tokenize(input, token, tokenLength);
 
 		// Now that the input is tokenized, we use those tokens to build an arithmetic expression.
-		if (token[0] == "(" && token[tokenLength - 1] == ")") {
-			// Strip off the outermost parentheses.
-			rex.interpret(token, 1, tokenLength - 2);
-		} else {
-			rex.interpret(token, 0, tokenLength - 1);
-		}
+		rex.interpret(token, 0, tokenLength - 1);
 
 		// If we have an expression with at least one operand, we evaluate, simplifying until it is an expression of a known ratio.
 		if (rex.hasLeft())
