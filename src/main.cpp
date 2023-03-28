@@ -33,12 +33,12 @@ int main (int argc, char ** argv) {
 	string input = "";
 	RationalExpression rex;
 	if (argc > 2) {
-		cout << "Usage: rc may take one shell argument, a rational expression enclosed in quotation marks." << endl;
+		cout << "Usage: rc may take one shell argument. Use quotation marks." << endl;
 		return 0;
 	}
-	if (argc == 1) {	// An expression was given as a shell argument.
+	if (argc == 2) {	// An expression was given as a shell argument.
 		input = argv[1];
-	} else {		// No shell argument. Prompt the user.
+	} else {			// No shell argument. Prompt the user.
 		cout << "rc > ";
 		getline(cin, input);
 	}
@@ -61,8 +61,8 @@ int main (int argc, char ** argv) {
 			rex.interpret(token, 0, tokenLength - 1);
 		}
 
-		// As long as we have an expression with operands, we evaluate, simplifying until it is an expression of a known ratio.
-		if (rex.hasOperands()) {
+		// If we have an expression with at least one operand, we evaluate, simplifying until it is an expression of a known ratio.
+		if (rex.hasLeft()) {
 			rex.evaluate();
 		}
 
@@ -71,6 +71,7 @@ int main (int argc, char ** argv) {
 		if (rex.getRatio())	{
 			result = rex.getRatio();
 			cout << "Result: " << *result << endl;
+			rex.setRatio(0);
 		}
 
 		// Get the next input and repeat.

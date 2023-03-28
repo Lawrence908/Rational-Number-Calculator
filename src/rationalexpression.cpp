@@ -58,11 +58,21 @@ Ratio * RationalExpression:: getRatio() {
 }
 
 
-/** @brief Gives whether this Rex has both operands.
- * @return True if this Rex has both operands. False otherwise.
+/** @brief Ratio setter. Sets this Rex's known ratio pointer.
  */
-bool RationalExpression:: hasOperands() {
-    return (_leftOperand && _rightOperand);
+void RationalExpression:: setRatio(Ratio * ratio) {
+    _knownRatio = ratio;
+}
+
+
+/** @brief Gives whether this Rex has a particular operand.
+ * @return True if this Rex has the named operand. False otherwise.
+ */
+bool RationalExpression:: hasLeft() {
+    return !!_leftOperand;
+}
+bool RationalExpression:: hasRight() {
+    return !!_rightOperand;
 }
 
 
@@ -115,21 +125,31 @@ void RationalExpression:: interpret (string * token, int first, int last) {
 }
 
 
-/** @brief Evaluates a Rex.
- * Transforms this Rex that has operands, simplifying it until it has a known ratio instead. Recursively evaluates this Rex's left and right operands the same way. Destructs this Rex's left and right operands when finished with them.
+/** @brief Evaluates a Rex that has one or two operands.
+ * Operates on a Rex that has a left operand and possibly a right operand. Transforms this Rex, simplifying it until it has a known ratio instead, according to rational arithmetic. If there are both operands, a binary operation is performed. If there is only the left operand, a unary operation is performed.
+ * Recursively evaluates this Rex's left and right operands the same way. Destructs this Rex's left and right operands when finished with them.
  */
 void RationalExpression:: evaluate () {
-	if (_leftOperand->_leftOperand != 0) {
-		_leftOperand->evaluate();	
-	}
-	if (_rightOperand->_leftOperand != 0) {
-		_rightOperand->evaluate();	
+	Ratio leftRatio;
+	Ratio rightRatio;
+	if (_leftOperand->hasLeft())
+		_leftOperand->evaluate();
+	if (hasRight()) {
+		if (_rightOperand->hasLeft())
+			_rightOperand->evaluate();
+		// Binary operation: the operator acts on the left and right operands.
+		leftRatio = *(_leftOperand->_knownRatio);
+		rightRatio = *(_rightOperand->_knownRatio);
+	} else {
+		// Unary operation: the operator acts on the identity element and the left operand. For addition and subtraction, the identity element is 0/1. For multiplication and division, the identity element is 1/1.
+		if ((_operator == '+') || (_operator == '-'))
+			leftRatio = Ratio(0);
+		if ((_operator == '*') || (_operator == '/'))
+			leftRatio = Ratio(1);
+		rightRatio = *(_leftOperand->_knownRatio);
 	}
 
-	Ratio leftRatio = *(_leftOperand->_knownRatio);
-	Ratio rightRatio = *(_rightOperand->_knownRatio);
 	_knownRatio = new Ratio();
-
 	switch (_operator) {
 	case '+':
 		*_knownRatio = leftRatio + rightRatio;
@@ -147,11 +167,13 @@ void RationalExpression:: evaluate () {
 	_knownRatio->reduce();
 
 	delete _leftOperand->_knownRatio;
-	delete _rightOperand->_knownRatio;
 	delete _leftOperand;
-	delete _rightOperand;
 	_leftOperand = 0;
-	_rightOperand = 0;
+	if (hasRight()) {
+		delete _rightOperand->_knownRatio;
+		delete _rightOperand;
+		_rightOperand = 0;
+	}
 }
 
 

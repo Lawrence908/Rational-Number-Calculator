@@ -33,16 +33,18 @@ public:
   RationalExpression (RationalExpression &&);
   RationalExpression & operator = (RationalExpression &&);
 
-  // Ratio getter.
+  // Ratio getter and setter.
   Ratio * getRatio();
+  void setRatio(Ratio *);
 
-  // Gives whether a Rex has both operands.
-  bool hasOperands();
+  // Give whether a Rex has a particular operand.
+  bool hasLeft();
+  bool hasRight();
 
   // Converts a sequence of tokens into a Rex.
   void interpret (string * token, int first, int last);
 
-  // Evaluates a Rex.
+  // Evaluates a Rex (that has one or two operands) by rational arithmetic.
   void evaluate ();
 
   // Prints a Rational expression out to the console
