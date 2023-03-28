@@ -11,7 +11,7 @@
  */
 
 
-// Included library, header, and source files
+// Included library, header, and source files.
 #include <iostream>
 #include <cstdint>
 #include <regex>
@@ -26,41 +26,48 @@ using namespace std;
 
 int main (int argc, char ** argv) {
 	cout << "Rational Calculator v0.1." << endl;
-	RationalExpression rex;
+	// First, we need an input string and a RationalExpression object to hold our interpretation of the string.
 	string input = "";
+	RationalExpression rex;
 	if (argc > 1) {
+		// An expression was given as shell arguments. Concatenate them.
 		for (int i = 1; i < argc; i++)
 			input += argv[i];
 	} else {
+		// No shell argument. Prompt the user.
 		cout << "rc > ";
 		getline(cin, input);
 	}
 
-	// Program loop. An input starting with 'q' quits the program.
+	// Calculator loop. An input starting with 'q' quits the program.
 	while (tolower(input[0]) != 'q') {
 		int inputLength = 0;
-			while (input[inputLength])	{
+			while (input[inputLength]) {
 			inputLength++;
 		}
-		
+		// The input length is the upper bound of tokens needed. Convert the input string into an array of token strings. Each token is one of the expression's lexical items: an integer, an operator, or a parenthesis.
 		string token[inputLength];
 		int tokenLength;
 		tokenize(input, token, tokenLength);
 
-		if (token[0] == "(") {
-			rex.interpret(token, 1, tokenLength - 2);  //strip off parentheses
+		// Now that the input is tokenized, we use those tokens to build an arithmetic expression.
+		if (token[0] == "(") {	// Strip off the outermost parentheses.
+			rex.interpret(token, 1, tokenLength - 2);
 		} else {
 			rex.interpret(token, 0, tokenLength - 1);
 		}
 
+		// Now that we have an expression with operands, we evaluate, simplifying until it is an expression of a known ratio.
 		rex.evaluate();
 
+		// Print the result.
 		Ratio * result;
 		if (rex.getRatio())	{
 			result = rex.getRatio();
-			cout << "Result = " << *result << endl;
+			cout << "Result: " << *result << endl;
 		}
 
+		// Get the next input and repeat.
 		cout << "rc > ";
 		getline(cin, input);
 	}
@@ -68,13 +75,18 @@ int main (int argc, char ** argv) {
 }
 
 
-// Breaks a string into an array of tokens that are parts of an arithmetic expression.
+/**
+ * @brief Breaks a string into a sequence of tokens that are parts of an arithmetic expression. Each token is a string that is either one of the symbols +-/*() or numeric. Prints the sequence of tokens. Fills the token array with the sequence and counts the tokens.
+ * @param input The input string.
+ * @param token The array of token strings. Should start empty with an upper-bound size. Gets filled with the expression's tokens.
+ * @param tokenLength The count of tokens. Passed and returned by value.
+ */
 void tokenize (string input, string token[], int & tokenLength)	{
 	regex expr_regex("\\d+|\\+|\\-|\\*|\\/|\\(|\\)");
 	sregex_iterator it(input.begin(), input.end(), expr_regex);
 	sregex_iterator end;
 	int i = 0;
-	cout << "Tokenized: ";
+	cout << "Tokens: ";
 	while (it != end) {
 		token[i] = it->str();
 		cout << token[i] << " ";
