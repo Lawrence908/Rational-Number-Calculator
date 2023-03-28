@@ -19,9 +19,12 @@
 #include <cctype>
 #include "../include/ratio.h"
 #include "../include/rationalexpression.h"
-#include "../include/main.h"
 #include "rationalexpression.cpp"
 using namespace std;
+
+
+// Function declarations.
+void tokenize (string input, string token[], int &tokenLength);
 
 
 int main (int argc, char ** argv) {
@@ -76,7 +79,8 @@ int main (int argc, char ** argv) {
 
 
 /**
- * @brief Breaks a string into a sequence of tokens that are parts of an arithmetic expression. Each token is a string that is either one of the symbols +-/*() or numeric. Prints the sequence of tokens. Fills the token array with the sequence and counts the tokens.
+ * @brief Breaks a string into tokens.
+ * Breaks an input string into a sequence of tokens that are parts of an arithmetic expression. Each token is a string that is either one of the symbols +-/*() or numeric. Prints the sequence of tokens. Fills the token array with the sequence and counts the tokens.
  * @param input The input string.
  * @param token The array of token strings. Should start empty with an upper-bound size. Gets filled with the expression's tokens.
  * @param tokenLength The count of tokens. Passed and returned by value.

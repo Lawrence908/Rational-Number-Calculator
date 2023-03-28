@@ -1,7 +1,9 @@
 /** Rational Calculator: Rational expression class implementation.
  *
- *  @file rationalexpression.h
- *  @brief A class that represents a rational expression.
+ *  @file rationalexpression.cpp
+ *  @brief Implementation of the RationalExpression class declared in rationalexpression.h.
+ * 
+ *  In this implementation file, comments will shorten RationalExpression to Rex. The notation (ratio operator leftOperand rightOperand) is used to represent the elements of a Rex.
  *
  *  @author Rafe Saltman, Chris Lawrence, and Santiago Daza
  *  @version 0.1.0
@@ -12,9 +14,20 @@
 #include <cctype>
 using namespace std;
 
+
+/** @brief Default constructor. Makes a Rex of the form (null / null null).
+ */
 RationalExpression::RationalExpression (): _knownRatio(0), _operator('/'), _leftOperand(0), _rightOperand(0) {}
 
-RationalExpression::RationalExpression (RationalExpression&& temp):
+
+/** @brief Ratio constructor. Makes a Rex of the form (ratio / null null).
+ */
+RationalExpression::RationalExpression (Ratio * ratio): _knownRatio(ratio), _operator('/'), _leftOperand(0), _rightOperand(0) {}
+
+
+/** @brief Move constructor. Takes the elements of an r-valued Rex and transfers them to this Rex.
+ */
+RationalExpression:: RationalExpression (RationalExpression&& temp):
     _knownRatio(temp._knownRatio), _operator(temp._operator), _leftOperand(temp._leftOperand), _rightOperand(temp._rightOperand) {
     temp._knownRatio = 0;
     temp._operator = 0;
@@ -22,7 +35,10 @@ RationalExpression::RationalExpression (RationalExpression&& temp):
     temp._rightOperand = 0;
 }
 
-RationalExpression& RationalExpression:: operator = (RationalExpression&& temp)	{
+
+/** @brief Move assignment operator. Takes the elements of an r-valued Rex and transfers them to this Rex.
+ */
+RationalExpression & RationalExpression:: operator = (RationalExpression && temp) {
 	_knownRatio = temp._knownRatio;
 	_operator = temp._operator;
 	_leftOperand = temp._leftOperand;
@@ -34,28 +50,33 @@ RationalExpression& RationalExpression:: operator = (RationalExpression&& temp)	
 	return *this;
 }
 
-Ratio * RationalExpression::getRatio() {
+
+/** @brief Ratio getter. Gets this Rex's known ratio pointer.
+ */
+Ratio * RationalExpression:: getRatio() {
     return _knownRatio;
 }
 
 
-// Takes an array of tokens with a relevant range. Interprets the part of the array within the relevant range as a rational expression. Returns that expression.
-void RationalExpression::interpret (string * token, int first, int last)	{
+/** @brief Token-interpreting "constructor".
+ * Takes an array of tokens with a relevant range. Interprets the part of the array within the relevant range as the elements of a Rex. Gives those elements to this Rex. Recursively constructs this Rex's left and right operands the same way.
+ */
+void RationalExpression:: interpret (string * token, int first, int last) {
 	int operandsCount = 0;
 	for (int i = first; i <= last; i++)	{
-		if ((token[i] == "+") || (token[i] == "-") || (token[i] == "*") || (token[i] == "/"))	{
+		if ((token[i] == "+") || (token[i] == "-") || (token[i] == "*") || (token[i] == "/")) {
 			_operator = token[i][0];
 
-		} else if (token[i] == "(")	{
+		} else if (token[i] == "(") {
 			int operandFirstIndex = i + 1;
 			int operandLastIndex;
 			int parenthesisCount = 1;
-			for (int j = i+1; j <= last; j++)	{
+			for (int j = i+1; j <= last; j++) {
 				if (token[j] == "(") {
 					parenthesisCount++;
-				} else if (token[j] == ")")	{
+				} else if (token[j] == ")") {
 					parenthesisCount--;
-					if (parenthesisCount == 0)	{
+					if (parenthesisCount == 0) {
 						operandLastIndex = j - 1;
 						i = j + 1;
 						break;  //out of for(j...)
@@ -74,11 +95,10 @@ void RationalExpression::interpret (string * token, int first, int last)	{
 		} else if (isdigit(token[i][0])) {
 				int64_t top = (int64_t)stoi(token[i]);
 				Ratio * ratio = new Ratio(top);
-				RationalExpression * rexKnown = new RationalExpression();
-				rexKnown->_knownRatio = ratio;
+				RationalExpression * rexKnown = new RationalExpression(ratio);
 			if (operandsCount == 0)	{
 				_leftOperand = rexKnown;
-			} else if (operandsCount == 1)	{
+			} else if (operandsCount == 1) {
 				_rightOperand = rexKnown;
 			}
 			operandsCount++;
@@ -87,8 +107,10 @@ void RationalExpression::interpret (string * token, int first, int last)	{
 }
 
 
-// Takes an expression without a known ratio and returns one without operands.
-void RationalExpression::evaluate () {
+/** @brief Evaluates a Rex.
+ * Transforms this Rex that has operands, simplifying it until it has a known ratio instead. Recursively evaluates this Rex's left and right operands the same way. Destructs this Rex's left and right operands when finished with them.
+ */
+void RationalExpression:: evaluate () {
 	if (_leftOperand->_leftOperand != 0) {
 		_leftOperand->evaluate();	
 	}
@@ -96,34 +118,37 @@ void RationalExpression::evaluate () {
 		_rightOperand->evaluate();	
 	}
 
-	Ratio leftKnown = *(_leftOperand->_knownRatio);
-	Ratio rightKnown = *(_rightOperand->_knownRatio);
+	Ratio leftRatio = *(_leftOperand->_knownRatio);
+	Ratio rightRatio = *(_rightOperand->_knownRatio);
 	_knownRatio = new Ratio();
 
 	switch (_operator) {
 	case '+':
-		*_knownRatio = leftKnown + rightKnown;
+		*_knownRatio = leftRatio + rightRatio;
 		break;
 	case '-':
-		*_knownRatio = leftKnown - rightKnown;
+		*_knownRatio = leftRatio - rightRatio;
 		break;
 	case '*':
-		*_knownRatio = leftKnown * rightKnown;
+		*_knownRatio = leftRatio * rightRatio;
 		break;
 	case '/':
-		*_knownRatio = leftKnown / rightKnown;
+		*_knownRatio = leftRatio / rightRatio;
 		break;
 	}
 	_knownRatio->reduce();
 
-	delete _leftOperand, delete _rightOperand;
+	delete _leftOperand->_knownRatio;
+	delete _rightOperand->_knownRatio;
+	delete _leftOperand;
+	delete _rightOperand;
 	_leftOperand = 0;
 	_rightOperand = 0;
 }
 
 
 // Prints a Rational expression out to the console
-void RationalExpression::print ()	{
+void RationalExpression:: print ()	{
     cout << "Rex Known Ratio: ";
 	if(_knownRatio)	{
     	cout << *_knownRatio << endl;;
@@ -146,4 +171,4 @@ void RationalExpression::print ()	{
 
 
 // Prints the enclosing expression
-void RationalExpression::printEnclosing (string enclosing, int insertionPoint) {}
+void RationalExpression:: printEnclosing (string enclosing, int insertionPoint) {}

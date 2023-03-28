@@ -1,8 +1,10 @@
-/** Rational Calculator: Rational expression class design.
+/** Rational Calculator: Rational expression class header.
  *
  *  @file rationalexpression.h
  *  @brief A class that represents a rational expression.
  *
+ *  In this class header file, comments will shorten RationalExpression to Rex.
+ * 
  *  @author Rafe Saltman, Chris Lawrence, and Santiago Daza
  *  @version 0.1.0
  *  @date March 21, 2023
@@ -22,19 +24,22 @@ private:
   char _operator;
   RationalExpression * _leftOperand;
   RationalExpression * _rightOperand;
-public:
-  RationalExpression();
-  ~RationalExpression() {}
-  RationalExpression(RationalExpression&&);
-  RationalExpression& operator = (RationalExpression&&);
 
-  // 
+public:
+  // Rex constructors, destructor, and move assignment.
+  RationalExpression ();
+  RationalExpression (Ratio *);
+  ~RationalExpression () {}
+  RationalExpression (RationalExpression &&);
+  RationalExpression & operator = (RationalExpression &&);
+
+  // Ratio getter.
   Ratio * getRatio();
 
-  // Takes a string, interprets it as a rational expression, and returns that expression.
+  // Converts a sequence of tokens into a Rex.
   void interpret (string * token, int first, int last);
 
-  // Takes an expression without a known ratio and returns one without operands.
+  // Evaluates a Rex.
   void evaluate ();
 
   // Prints a Rational expression out to the console
