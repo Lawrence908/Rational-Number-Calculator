@@ -99,7 +99,7 @@ void RationalExpression:: interpret (string * token, int first, int last) {
 		} else if (token[i] == "(") {
 			int operandFirstIndex = i + 1;
 			int operandLastIndex = matchingParenthesis(token, operandFirstIndex, last);
-			i = operandLastIndex + 2;
+			i = operandLastIndex + 1;
 			if (operandsCount == 0) {
 				_leftOperand = new RationalExpression();
 				_leftOperand->interpret(token, operandFirstIndex, operandLastIndex);
