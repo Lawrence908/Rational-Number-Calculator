@@ -15,9 +15,9 @@
 using namespace std;
 
 
-/** @brief Default constructor. Makes a Rex of the form (null / null null).
+/** @brief Default constructor. Makes a Rex of the form (null * null null).
  */
-RationalExpression::RationalExpression (): _knownRatio(0), _operator('/'), _leftOperand(0), _rightOperand(0) {}
+RationalExpression::RationalExpression (): _knownRatio(0), _operator('*'), _leftOperand(0), _rightOperand(0) {}
 
 
 /** @brief Ratio constructor. Makes a Rex of the form (ratio / null null).
@@ -27,12 +27,12 @@ RationalExpression::RationalExpression (Ratio * ratio): _knownRatio(ratio), _ope
 
 /** @brief Move constructor. Takes the elements of an r-valued Rex and transfers them to this Rex.
  */
-RationalExpression:: RationalExpression (RationalExpression&& temp):
-    _knownRatio(temp._knownRatio), _operator(temp._operator), _leftOperand(temp._leftOperand), _rightOperand(temp._rightOperand) {
-    temp._knownRatio = 0;
-    temp._operator = 0;
-    temp._leftOperand = 0;
-    temp._rightOperand = 0;
+RationalExpression:: RationalExpression (RationalExpression && temp):
+	_knownRatio(temp._knownRatio), _operator(temp._operator), _leftOperand(temp._leftOperand), _rightOperand(temp._rightOperand) {
+	temp._knownRatio = 0;
+	temp._operator = 0;
+	temp._leftOperand = 0;
+	temp._rightOperand = 0;
 }
 
 
@@ -44,9 +44,9 @@ RationalExpression & RationalExpression:: operator = (RationalExpression && temp
 	_leftOperand = temp._leftOperand;
 	_rightOperand = temp._rightOperand;
 	temp._knownRatio = 0;
-    temp._operator = 0;
-    temp._leftOperand = 0;
-    temp._rightOperand = 0;
+	temp._operator = 0;
+	temp._leftOperand = 0;
+	temp._rightOperand = 0;
 	return *this;
 }
 
@@ -54,14 +54,14 @@ RationalExpression & RationalExpression:: operator = (RationalExpression && temp
 /** @brief Ratio getter. Gets this Rex's known ratio pointer.
  */
 Ratio * RationalExpression:: getRatio() {
-    return _knownRatio;
+	return _knownRatio;
 }
 
 
 /** @brief Ratio setter. Sets this Rex's known ratio pointer.
  */
 void RationalExpression:: setRatio(Ratio * ratio) {
-    _knownRatio = ratio;
+	_knownRatio = ratio;
 }
 
 
@@ -69,10 +69,10 @@ void RationalExpression:: setRatio(Ratio * ratio) {
  * @return True if this Rex has the named operand. False otherwise.
  */
 bool RationalExpression:: hasLeft() {
-    return !!_leftOperand;
+	return !!_leftOperand;
 }
 bool RationalExpression:: hasRight() {
-    return !!_rightOperand;
+	return !!_rightOperand;
 }
 
 
@@ -81,47 +81,57 @@ bool RationalExpression:: hasRight() {
  */
 void RationalExpression:: interpret (string * token, int first, int last) {
 	int operandsCount = 0;
-	for (int i = first; i <= last; i++)	{
-		if ((token[i] == "+") || (token[i] == "-") || (token[i] == "*") || (token[i] == "/")) {
+	for (int i = first; i <= last; i++) {
+		if ((token[i] == "+") || (token[i] == "-")
+		 || (token[i] == "*") || (token[i] == "/")) {
 			_operator = token[i][0];
+
+		} else if (isdigit(token[i][0])) {
+			int64_t top = (int64_t)stoi(token[i]);
+			Ratio * ratio = new Ratio(top);
+			RationalExpression * rexKnown = new RationalExpression(ratio);
+			if (operandsCount == 0)
+				_leftOperand = rexKnown;
+			if (operandsCount == 1)
+				_rightOperand = rexKnown;
+			operandsCount++;
 
 		} else if (token[i] == "(") {
 			int operandFirstIndex = i + 1;
-			int operandLastIndex;
-			int parenthesisCount = 1;
-			for (int j = i+1; j <= last; j++) {
-				if (token[j] == "(") {
-					parenthesisCount++;
-				} else if (token[j] == ")") {
-					parenthesisCount--;
-					if (parenthesisCount == 0) {
-						operandLastIndex = j - 1;
-						i = j + 1;
-						break;  //out of for(j...)
-					}
-				}
-			}
-			if (operandsCount == 0)	{
+			int operandLastIndex = matchingParenthesis(token, operandFirstIndex, last);
+			i = operandLastIndex + 2;
+			if (operandsCount == 0) {
 				_leftOperand = new RationalExpression();
 				_leftOperand->interpret(token, operandFirstIndex, operandLastIndex);
 
-			} else if (operandsCount == 1)	{
+			} else if (operandsCount == 1) {
 				_rightOperand = new RationalExpression();
 				_rightOperand->interpret(token, operandFirstIndex, operandLastIndex);
 			}
 			operandsCount++;
-		} else if (isdigit(token[i][0])) {
-				int64_t top = (int64_t)stoi(token[i]);
-				Ratio * ratio = new Ratio(top);
-				RationalExpression * rexKnown = new RationalExpression(ratio);
-			if (operandsCount == 0)	{
-				_leftOperand = rexKnown;
-			} else if (operandsCount == 1) {
-				_rightOperand = rexKnown;
-			}
-			operandsCount++;
 		}
 	}
+}
+
+/** @brief Finds the matching closing parenthesis.
+ * Non-member helper to RationalExpression. From a first token in an operand, finds the last token in the operand by matching up parentheses.
+ * @param token The array of tokens.
+ * @param first The first index of the operand.
+ * @param last The last possible index.
+ * @return The index of the token just before the matching closing parenthesis.
+ */
+int matchingParenthesis (string * token, int first, int last) {
+	int parenthesisCount = 1;
+	int j;
+	for (j = first; j <= last; j++) {
+		if (token[j] == "(")
+			parenthesisCount++;
+		if (token[j] == ")")
+			parenthesisCount--;
+		if (parenthesisCount == 0)
+			break;
+	}
+	return j - 1;
 }
 
 
@@ -178,24 +188,24 @@ void RationalExpression:: evaluate () {
 
 
 // Prints a Rational expression out to the console
-void RationalExpression:: print ()	{
-    cout << "Rex Known Ratio: ";
-	if(_knownRatio)	{
-    	cout << *_knownRatio << endl;;
+void RationalExpression:: print () {
+	cout << "Rex Known Ratio: ";
+	if(_knownRatio) {
+		cout << *_knownRatio << endl;;
 	} else {
 		cout << "NULL." << endl;
 	}
 
 	cout << "Rex Operator: " << _operator << endl;
 
-    cout << "Rex Left Operand address: " << _leftOperand << endl;
-	if(_leftOperand)	{
-    	cout << "Rex Left Operand value: "; _leftOperand->print(); cout << endl;
+	cout << "Rex Left Operand address: " << _leftOperand << endl;
+	if(_leftOperand) {
+		cout << "Rex Left Operand value: "; _leftOperand->print(); cout << endl;
 	}
 
-    cout << "Rex Right Operand address: " << _rightOperand << endl;
-	if(_rightOperand)	{
-    	cout << "Rex Right Operand value: "; _rightOperand->print(); cout << endl;
+	cout << "Rex Right Operand address: " << _rightOperand << endl;
+	if(_rightOperand) {
+		cout << "Rex Right Operand value: "; _rightOperand->print(); cout << endl;
 	}
 }
 

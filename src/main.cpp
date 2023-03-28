@@ -36,46 +36,45 @@ int main (int argc, char ** argv) {
 		cout << "Usage: rc may take one shell argument. Use quotation marks." << endl;
 		return 0;
 	}
-	if (argc == 2) {	// An expression was given as a shell argument.
+	if (argc == 2) {        // An expression was given as a shell argument.
 		input = argv[1];
-	} else {			// No shell argument. Prompt the user.
-		cout << "rc > ";
+	} else {                // No shell argument. Prompt the user.
+		cout << "   rc > ";
 		getline(cin, input);
 	}
 
 	// Calculator loop. An input starting with 'q' quits the program.
 	while (tolower(input[0]) != 'q') {
 		int inputLength = 0;
-			while (input[inputLength]) {
+		while (input[inputLength])
 			inputLength++;
-		}
 		// The input length is the upper bound of tokens needed. Convert the input string into an array of token strings. Each token is one of the expression's lexical items: an integer, an operator, or a parenthesis.
 		string token[inputLength];
 		int tokenLength;
 		tokenize(input, token, tokenLength);
 
 		// Now that the input is tokenized, we use those tokens to build an arithmetic expression.
-		if (token[0] == "(") {	// Strip off the outermost parentheses.
+		if (token[0] == "(") {
+			// Strip off the outermost parentheses.
 			rex.interpret(token, 1, tokenLength - 2);
 		} else {
 			rex.interpret(token, 0, tokenLength - 1);
 		}
 
 		// If we have an expression with at least one operand, we evaluate, simplifying until it is an expression of a known ratio.
-		if (rex.hasLeft()) {
+		if (rex.hasLeft())
 			rex.evaluate();
-		}
 
 		// Print the result.
 		Ratio * result;
-		if (rex.getRatio())	{
+		if (rex.getRatio()) {
 			result = rex.getRatio();
 			cout << "Result: " << *result << endl;
 			rex.setRatio(0);
 		}
 
 		// Get the next input and repeat.
-		cout << "rc > ";
+		cout << "   rc > ";
 		getline(cin, input);
 	}
 	return 0;
@@ -89,7 +88,7 @@ int main (int argc, char ** argv) {
  * @param token The array of token strings. Should start empty with an upper-bound size. Gets filled with the expression's tokens.
  * @param tokenLength The count of tokens. Passed and returned by value.
  */
-void tokenize (string input, string token[], int & tokenLength)	{
+void tokenize (string input, string token[], int & tokenLength) {
 	regex expr_regex("\\d+|\\+|\\-|\\*|\\/|\\(|\\)");
 	sregex_iterator it(input.begin(), input.end(), expr_regex);
 	sregex_iterator end;
